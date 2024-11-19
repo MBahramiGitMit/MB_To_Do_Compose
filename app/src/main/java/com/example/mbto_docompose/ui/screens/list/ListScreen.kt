@@ -13,9 +13,15 @@ import com.example.mbto_docompose.R
 
 @Composable
 fun ListScreen(navigationToTaskScreen: (Int) -> Unit) {
-    Scaffold(content = { it }, floatingActionButton = {
-        ListFab(onFabClicked = navigationToTaskScreen)
-    })
+    Scaffold(
+        topBar = {
+            ListAppBar()
+        },
+        content = { it },
+        floatingActionButton = {
+            ListFab(onFabClicked = navigationToTaskScreen)
+        },
+    )
 }
 
 @Composable
