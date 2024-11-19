@@ -29,7 +29,7 @@ private val LightColorPalette = lightColors(
 
 @Composable
 fun MBToDoComposeTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) {
