@@ -1,6 +1,5 @@
 package com.example.mbto_docompose.ui.screens.list
 
-import androidx.compose.foundation.background
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -8,18 +7,29 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.mbto_docompose.R
 import com.example.mbto_docompose.ui.theme.fabBackgroundColor
+import com.example.mbto_docompose.ui.viewmodels.SharedViewModel
+import com.example.mbto_docompose.util.SearchAppBarState
 
 @Composable
-fun ListScreen(navigationToTaskScreen: (taskId: Int) -> Unit) {
+fun ListScreen(
+    sharedViewModel: SharedViewModel,
+    navigationToTaskScreen: (taskId: Int) -> Unit
+) {
+    val searchAppBarState: SearchAppBarState by sharedViewModel.searchAppBarState
+    val searchTextState: String by sharedViewModel.searchTextState
+
     Scaffold(
         topBar = {
-            ListAppBar()
+            ListAppBar(
+                sharedViewModel = sharedViewModel,
+                searchAppBarState = searchAppBarState,
+                searchTextState = searchTextState
+            )
         },
         content = { it },
         floatingActionButton = {
@@ -40,10 +50,4 @@ fun ListFab(onFabClicked: (taskId: Int) -> Unit) {
 
         )
     }
-}
-
-@Composable
-@Preview
-private fun ListScreenPreview() {
-    ListScreen(navigationToTaskScreen = {})
 }
