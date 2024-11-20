@@ -1,5 +1,6 @@
 package com.example.mbto_docompose.ui.screens.list
 
+import android.annotation.SuppressLint
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -15,6 +16,7 @@ import com.example.mbto_docompose.ui.theme.fabBackgroundColor
 import com.example.mbto_docompose.ui.viewmodels.SharedViewModel
 import com.example.mbto_docompose.util.SearchAppBarState
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ListScreen(
     sharedViewModel: SharedViewModel,
@@ -31,7 +33,9 @@ fun ListScreen(
                 searchTextState = searchTextState
             )
         },
-        content = { it },
+        content = {
+            ListContent()
+        },
         floatingActionButton = {
             ListFab(onFabClicked = navigationToTaskScreen)
         },
