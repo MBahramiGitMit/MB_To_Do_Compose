@@ -1,19 +1,21 @@
 package com.example.mbto_docompose.ui.screens.list
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
@@ -23,14 +25,46 @@ import com.example.mbto_docompose.data.models.Priority
 import com.example.mbto_docompose.data.models.ToDoTask
 import com.example.mbto_docompose.ui.theme.LARGE_PADDING
 import com.example.mbto_docompose.ui.theme.PRIORITY_INDICATOR_SIZE
+import com.example.mbto_docompose.ui.theme.SMALL_PADDING
 import com.example.mbto_docompose.ui.theme.TASK_ITEM_ELEVATION
 import com.example.mbto_docompose.ui.theme.taskItemBackgroundColor
 import com.example.mbto_docompose.ui.theme.taskItemTextColor
+import com.example.mbto_docompose.util.RequestState
 
 @Composable
-fun ListContent() {
+fun ListContent(
+    tasks: RequestState<List<ToDoTask>>,
+    navigateToTaskScreen: (taskId: Int) -> Unit
+) {
+    if (tasks is RequestState.Success){
+        if (tasks.data.isNotEmpty()) {
+            DisplayContent(
+                tasks = tasks.data,
+                navigateToTaskScreen = navigateToTaskScreen
+            )
+        } else {
+            EmptyContent()
+        }
+    }
+}
 
-
+@Composable
+fun DisplayContent(
+    tasks: List<ToDoTask>,
+    navigateToTaskScreen: (taskId: Int) -> Unit
+) {
+    LazyColumn {
+        items(
+            items = tasks,
+            key = { task ->
+                task.id
+            }) { task ->
+            TaskItem(
+                toDoTask = task,
+                navigateToTaskScreen = navigateToTaskScreen
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -67,6 +101,7 @@ fun TaskItem(
                     drawCircle(color = toDoTask.priority.color)
                 }
             }
+            Spacer(modifier = Modifier.height(SMALL_PADDING))
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = toDoTask.description,
