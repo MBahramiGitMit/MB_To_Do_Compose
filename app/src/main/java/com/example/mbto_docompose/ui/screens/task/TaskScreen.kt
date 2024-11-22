@@ -34,6 +34,11 @@ fun TaskScreen(
                             navigateToListScreen(action)
                         }
 
+                        Action.DELETE -> {
+                            navigateToListScreen(action)
+                        }
+
+
                         else -> {
                             if (sharedViewModel.validateFields()) {
                                 navigateToListScreen(action)

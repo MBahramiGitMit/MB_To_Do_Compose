@@ -1,6 +1,5 @@
 package com.example.mbto_docompose.ui.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -87,6 +86,18 @@ class SharedViewModel @Inject constructor(
         }
     }
 
+    private fun deleteTask() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val toDoTask = ToDoTask(
+                id = id.value,
+                title = title.value,
+                description = description.value,
+                priority = priority.value
+            )
+            repository.deleteTask(toDoTask)
+        }
+    }
+
     fun handleDatabaseAction(action: Action) {
         when (action) {
             Action.ADD -> {
@@ -98,7 +109,7 @@ class SharedViewModel @Inject constructor(
             }
 
             Action.DELETE -> {
-
+                deleteTask()
             }
 
             Action.DELETE_ALL -> {
