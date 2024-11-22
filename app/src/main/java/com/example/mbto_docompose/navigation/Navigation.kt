@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import com.example.mbto_docompose.navigation.destinations.listComposable
 import com.example.mbto_docompose.navigation.destinations.taskComposable
 import com.example.mbto_docompose.ui.viewmodels.SharedViewModel
+import com.example.mbto_docompose.util.Action
 
 @Composable
 fun SetupNavigation(
@@ -20,7 +21,7 @@ fun SetupNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = "list/{NO_ACTION}"
+        startDestination = "list/{${Action.NO_ACTION}}"
     ) {
         listComposable(
             navigationToTaskScreen = screens.task,

@@ -1,5 +1,6 @@
 package com.example.mbto_docompose.ui.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -8,10 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.mbto_docompose.data.models.Priority
 import com.example.mbto_docompose.data.models.ToDoTask
 import com.example.mbto_docompose.data.repository.ToDoRepository
+import com.example.mbto_docompose.util.Action
 import com.example.mbto_docompose.util.Constants.MAX_TITLE_LENGTH
 import com.example.mbto_docompose.util.RequestState
 import com.example.mbto_docompose.util.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -21,6 +24,8 @@ import javax.inject.Inject
 class SharedViewModel @Inject constructor(
     private val repository: ToDoRepository
 ) : ViewModel() {
+
+    val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
 
     val id: MutableState<Int> = mutableIntStateOf(0)
     val title: MutableState<String> = mutableStateOf("")
@@ -55,12 +60,50 @@ class SharedViewModel @Inject constructor(
         viewModelScope.launch {
             repository.getSelectedTask(taskId = taskId).collect { task ->
                 _selectedTask.value = task
-                updateTaskFields(task)
             }
         }
     }
 
-    private fun updateTaskFields(selectedTask: ToDoTask?) {
+    private fun addTask() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val toDoTask = ToDoTask(
+                title = title.value,
+                description = description.value,
+                priority = priority.value
+            )
+            repository.addTask(toDoTask)
+        }
+    }
+
+    fun handleDatabaseAction(action: Action) {
+        when (action) {
+            Action.ADD -> {
+                addTask()
+            }
+
+            Action.UPDATE -> {
+            }
+
+            Action.DELETE -> {
+
+            }
+
+            Action.DELETE_ALL -> {
+
+            }
+
+            Action.UNDO -> {
+
+            }
+
+            else -> {
+
+            }
+        }
+        this.action.value = Action.NO_ACTION
+    }
+
+    fun updateTaskFields(selectedTask: ToDoTask?) {
         if (selectedTask != null) {
             id.value = selectedTask.id
             title.value = selectedTask.title
